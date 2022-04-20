@@ -1,3 +1,22 @@
+const digits = document.querySelectorAll(".digit");
+const display = document.querySelector(".display");
+const operators = document.querySelectorAll(".operator");
+let displayValue = "";
+
+digits.forEach((digit) => {
+  digit.addEventListener("click", () => populateDisplay(digit));
+});
+
+operators.forEach((operator) => {
+  operator.addEventListener("click", () => populateDisplay(operator));
+});
+
+function populateDisplay(type) {
+  display.textContent += type.textContent;
+  displayValue = display.textContent;
+  return displayValue;
+}
+
 function add(x, y) {
   return x + y;
 }
