@@ -23,16 +23,23 @@ digits.forEach((digit) => {
     }
     display.textContent += digit.textContent;
     displayValue = +display.textContent;
+    console.log([storedValue, displayValue]);
     return displayValue;
   });
 });
 
 operators.forEach((operator) => {
   operator.addEventListener("click", () => {
+    if (!operatorValue) {
+      display.textContent;
+    } else if (displayValue && storedValue) {
+      display.textContent = operate(operatorValue, storedValue, displayValue);
+      displayValue = +display.textContent;
+    }
     operatorValue = operator.textContent;
     storedValue = displayValue;
     displayValue = "";
-    console.log(operatorValue);
+    console.log([storedValue, displayValue]);
     return operatorValue;
   });
 });
@@ -40,6 +47,8 @@ operators.forEach((operator) => {
 equals.addEventListener("click", () => {
   display.textContent = operate(operatorValue, storedValue, displayValue);
   displayValue = +display.textContent;
+  console.log([storedValue, displayValue]);
+  return (operatorValue = "");
 });
 
 function add(x, y) {
