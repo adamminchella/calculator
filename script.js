@@ -44,6 +44,10 @@ digits.forEach((digit) => {
 
 operators.forEach((operator) => {
   operator.addEventListener("click", () => {
+    if (storedValue && !displayValue) {
+      operatorValue = operator.textContent;
+      return; // Allows user to reselect operator without resetting storedValue to ""
+    }
     if (digitPressed) {
       storedValue = "";
       digitPressed = false;
@@ -69,6 +73,10 @@ operators.forEach((operator) => {
 });
 
 equals.addEventListener("click", () => {
+  if (!operatorValue) {
+    display.textContent = displayValue;
+    return; // keeps the current displayed value if equals is clicked before selecting an operator
+  }
   if (lastPressedEquals || digitPressed) {
     display.textContent = operate(operatorValue, displayValue, storedValue); // parameters must be reversed for subtraction and division
     displayValue = +display.textContent;
@@ -79,14 +87,14 @@ equals.addEventListener("click", () => {
     storedValue = displayValue;
     displayValue = +display.textContent;
     lastPressedEquals = true; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same.
+    console.log([
+      operatorValue,
+      storedValue,
+      displayValue,
+      lastPressedEquals,
+      digitPressed,
+    ]);
   }
-  console.log([
-    operatorValue,
-    storedValue,
-    displayValue,
-    lastPressedEquals,
-    digitPressed,
-  ]);
 });
 
 function add(x, y) {
