@@ -15,7 +15,7 @@ function clearData() {
   storedValue = "";
   displayValue = "";
   operatorValue = "";
-  display.textContent = "";
+  display.textContent = 0;
   lastPressedEquals = false;
   digitPressed = false;
 }
@@ -75,6 +75,13 @@ operators.forEach((operator) => {
 equals.addEventListener("click", () => {
   if (!operatorValue) {
     display.textContent = displayValue;
+    console.log([
+      operatorValue,
+      storedValue,
+      displayValue,
+      lastPressedEquals,
+      digitPressed,
+    ]);
     return; // keeps the current displayed value if equals is clicked before selecting an operator
   }
   if (lastPressedEquals || digitPressed) {
