@@ -7,6 +7,7 @@ let storedValue = "";
 let displayValue = "";
 let operatorValue = "";
 let lastPressedEquals = false;
+let digitPressed = false;
 
 clear.addEventListener("click", clearData);
 
@@ -15,25 +16,38 @@ function clearData() {
   displayValue = "";
   operatorValue = "";
   display.textContent = "";
+  lastPressedEquals = false;
+  digitPressed = false;
 }
 
 digits.forEach((digit) => {
   digit.addEventListener("click", () => {
     if (lastPressedEquals) {
       display.textContent = "";
+      digitPressed = true;
+      lastPressedEquals = false;
     } else if (displayValue == "") {
       display.textContent = ""; // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
     }
     display.textContent += digit.textContent;
     displayValue = +display.textContent;
-    console.log([operatorValue, storedValue, displayValue, lastPressedEquals]);
+    console.log([
+      operatorValue,
+      storedValue,
+      displayValue,
+      lastPressedEquals,
+      digitPressed,
+    ]);
     return displayValue;
   });
 });
 
 operators.forEach((operator) => {
   operator.addEventListener("click", () => {
-    if (lastPressedEquals) {
+    if (digitPressed) {
+      storedValue = "";
+      digitPressed = false;
+    } else if (lastPressedEquals) {
       display.textContent;
       lastPressedEquals = false; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same
     } else if (displayValue && storedValue) {
@@ -43,22 +57,36 @@ operators.forEach((operator) => {
     operatorValue = operator.textContent;
     storedValue = displayValue;
     displayValue = ""; // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
-    console.log([operatorValue, storedValue, displayValue, lastPressedEquals]);
+    console.log([
+      operatorValue,
+      storedValue,
+      displayValue,
+      lastPressedEquals,
+      digitPressed,
+    ]);
     return operatorValue;
   });
 });
 
 equals.addEventListener("click", () => {
-  if (lastPressedEquals) {
+  if (lastPressedEquals || digitPressed) {
     display.textContent = operate(operatorValue, displayValue, storedValue); // parameters must be reversed for subtraction and division
     displayValue = +display.textContent;
+    digitPressed = false;
+    lastPressedEquals = true;
   } else {
     display.textContent = operate(operatorValue, storedValue, displayValue);
     storedValue = displayValue;
     displayValue = +display.textContent;
     lastPressedEquals = true; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same.
   }
-  console.log([operatorValue, storedValue, displayValue, lastPressedEquals]);
+  console.log([
+    operatorValue,
+    storedValue,
+    displayValue,
+    lastPressedEquals,
+    digitPressed,
+  ]);
 });
 
 function add(x, y) {
