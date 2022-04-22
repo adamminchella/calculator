@@ -7,7 +7,7 @@ let storedValue = "";
 let displayValue = "";
 let operatorValue = "";
 let lastPressedEquals = false;
-let digitPressed = false;
+let digitPressedAfterEquals = false;
 
 clear.addEventListener("click", clearData);
 
@@ -17,14 +17,14 @@ function clearData() {
   operatorValue = "";
   display.textContent = 0;
   lastPressedEquals = false;
-  digitPressed = false;
+  digitPressedAfterEquals = false;
 }
 
 digits.forEach((digit) => {
   digit.addEventListener("click", () => {
     if (lastPressedEquals) {
       display.textContent = "";
-      digitPressed = true;
+      digitPressedAfterEquals = true;
       lastPressedEquals = false;
     } else if (displayValue == "") {
       display.textContent = ""; // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
@@ -36,26 +36,33 @@ digits.forEach((digit) => {
       storedValue,
       displayValue,
       lastPressedEquals,
-      digitPressed,
+      digitPressedAfterEquals,
     ]);
+
     return displayValue;
   });
 });
 
 operators.forEach((operator) => {
   operator.addEventListener("click", () => {
-    if (storedValue && !displayValue) {
-      operatorValue = operator.textContent;
-      return; // Allows user to reselect operator without resetting storedValue to ""
+    if (storedValue && displayValue === "") {
+      operatorValue = operator.textContent; // Allows user to reselect operator without resetting storedValue to ""
+      console.log([
+        operatorValue,
+        storedValue,
+        displayValue,
+        lastPressedEquals,
+        digitPressedAfterEquals,
+      ]);
+      return operatorValue;
     }
-    if (digitPressed) {
-      storedValue = "";
-      digitPressed = false;
+    if (digitPressedAfterEquals) {
+      digitPressedAfterEquals = false;
     } else if (lastPressedEquals) {
-      display.textContent;
+      //   display.textContent;
       lastPressedEquals = false; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same
-    } else if (displayValue && storedValue) {
-      display.textContent = operate(operatorValue, storedValue, displayValue);
+    } else if (typeof displayValue === "number" && storedValue) {
+      display.textContent = operate(operatorValue, storedValue, displayValue); // had to use typeof because 0 is falsy
       displayValue = +display.textContent; // 3. allows display to be updated when chaining operations
     }
     operatorValue = operator.textContent;
@@ -66,7 +73,7 @@ operators.forEach((operator) => {
       storedValue,
       displayValue,
       lastPressedEquals,
-      digitPressed,
+      digitPressedAfterEquals,
     ]);
     return operatorValue;
   });
@@ -75,21 +82,33 @@ operators.forEach((operator) => {
 equals.addEventListener("click", () => {
   if (!operatorValue) {
     display.textContent = displayValue;
+    digitPressedAfterEquals = false;
+    lastPressedEquals = true;
     console.log([
       operatorValue,
       storedValue,
       displayValue,
       lastPressedEquals,
-      digitPressed,
+      digitPressedAfterEquals,
     ]);
     return; // keeps the current displayed value if equals is clicked before selecting an operator
   }
-  if (lastPressedEquals || digitPressed) {
+  if (lastPressedEquals || digitPressedAfterEquals) {
     display.textContent = operate(operatorValue, displayValue, storedValue); // parameters must be reversed for subtraction and division
     displayValue = +display.textContent;
-    digitPressed = false;
+    digitPressedAfterEquals = false;
     lastPressedEquals = true;
+    console.log([
+      operatorValue,
+      storedValue,
+      displayValue,
+      lastPressedEquals,
+      digitPressedAfterEquals,
+    ]);
   } else {
+    if (displayValue === "") {
+      displayValue = storedValue;
+    }
     display.textContent = operate(operatorValue, storedValue, displayValue);
     storedValue = displayValue;
     displayValue = +display.textContent;
@@ -99,7 +118,7 @@ equals.addEventListener("click", () => {
       storedValue,
       displayValue,
       lastPressedEquals,
-      digitPressed,
+      digitPressedAfterEquals,
     ]);
   }
 });
@@ -129,6 +148,9 @@ function operate(operator, x, y) {
     case "×":
       return multiply(x, y);
     case "÷":
+      if (y === 0) {
+        return "ERROR";
+      }
       return divide(x, y);
     default:
       "fuk u";
