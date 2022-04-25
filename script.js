@@ -5,11 +5,17 @@ const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
 const backspace = document.querySelector(".backspace");
 const negate = document.querySelector(".negate");
+const percent = document.querySelector(".percent");
 let storedValue = "";
 let displayValue = "";
 let operatorValue = "";
 let lastPressedEquals = false;
 let digitPressedAfterEquals = false;
+
+percent.addEventListener("click", () => {
+  display.textContent = display.textContent / 100;
+  displayValue = +display.textContent;
+});
 
 negate.addEventListener("click", negateDisplay);
 

@@ -57,7 +57,8 @@ button:hover {
   font-size: 30px;
 }
 
-.digit {
+.digit,
+.backspace {
   color: white;
   background-color: rgb(49, 49, 49);
 }
