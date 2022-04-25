@@ -26,9 +26,18 @@ function negateDisplay() {
 
 backspace.addEventListener("click", () => {
   let displayString = display.textContent;
-  let lastDigitRemoved = displayString.slice(0, displayString.length - 1);
-  displayValue = +lastDigitRemoved;
-  display.textContent = displayValue;
+  if (
+    displayString.length === 1 ||
+    (displayString.length === 2 && displayString.includes("-"))
+  ) {
+    // storedValue = "";
+    display.textContent = "0";
+    displayValue = +display.textContent;
+  } else {
+    let lastDigitRemoved = displayString.slice(0, displayString.length - 1);
+    display.textContent = lastDigitRemoved;
+    displayValue = +display.textContent;
+  }
 });
 
 clear.addEventListener("click", clearData);
@@ -73,6 +82,7 @@ function populateDisplay(digit) {
   display.textContent += digit.textContent;
   displayValue = +display.textContent;
   console.log([
+    operatorValue,
     storedValue,
     displayValue,
     lastPressedEquals,
