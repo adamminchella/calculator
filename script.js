@@ -21,107 +21,84 @@ function clearData() {
 }
 
 digits.forEach((digit) => {
-  digit.addEventListener("click", () => {
-    if (lastPressedEquals) {
-      display.textContent = "";
-      digitPressedAfterEquals = true;
-      lastPressedEquals = false;
-    } else if (displayValue == "") {
-      display.textContent = ""; // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
-    }
-    display.textContent += digit.textContent;
-    displayValue = +display.textContent;
-    console.log([
-      operatorValue,
-      storedValue,
-      displayValue,
-      lastPressedEquals,
-      digitPressedAfterEquals,
-    ]);
-
-    return displayValue;
-  });
+  digit.addEventListener("click", () => populateDisplay(digit));
 });
 
 operators.forEach((operator) => {
   operator.addEventListener("click", () => {
     if (storedValue && displayValue === "") {
-      operatorValue = operator.textContent; // Allows user to reselect operator without resetting storedValue to ""
-      console.log([
-        operatorValue,
-        storedValue,
-        displayValue,
-        lastPressedEquals,
-        digitPressedAfterEquals,
-      ]);
-      return operatorValue;
+      return reselectOperator(operator);
     }
-    if (digitPressedAfterEquals) {
-      digitPressedAfterEquals = false;
-    } else if (lastPressedEquals) {
-      //   display.textContent;
-      lastPressedEquals = false; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same
-    } else if (typeof displayValue === "number" && storedValue) {
-      display.textContent = operate(operatorValue, storedValue, displayValue); // had to use typeof because 0 is falsy
-      displayValue = +display.textContent; // 3. allows display to be updated when chaining operations
-    }
-    operatorValue = operator.textContent;
-    storedValue = displayValue;
-    displayValue = ""; // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
-    console.log([
-      operatorValue,
-      storedValue,
-      displayValue,
-      lastPressedEquals,
-      digitPressedAfterEquals,
-    ]);
-    return operatorValue;
+    operateOnOperator(operator);
   });
 });
 
 equals.addEventListener("click", () => {
   if (!operatorValue) {
-    display.textContent = displayValue;
-    digitPressedAfterEquals = false;
-    lastPressedEquals = true;
-    console.log([
-      operatorValue,
-      storedValue,
-      displayValue,
-      lastPressedEquals,
-      digitPressedAfterEquals,
-    ]);
-    return; // keeps the current displayed value if equals is clicked before selecting an operator
+    return retainDisplay();
   }
+  operateOnEquals();
+});
+
+function populateDisplay(digit) {
+  if (lastPressedEquals) {
+    clearDisplay();
+    digitPressedAfterEquals = true;
+    lastPressedEquals = false;
+  } else if (displayValue == "") {
+    clearDisplay(); // 1. resets displayValue so the display can be cleared when another digit is pressed after selecting an operator
+  }
+  display.textContent += digit.textContent;
+  displayValue = +display.textContent;
+  return displayValue;
+}
+
+function clearDisplay() {
+  return (display.textContent = "");
+}
+
+function reselectOperator(operator) {
+  operatorValue = operator.textContent; // allows user to reselect operator without resetting storedValue to ""
+  return operatorValue;
+}
+
+function operateOnOperator(operator) {
+  if (digitPressedAfterEquals || lastPressedEquals) {
+    digitPressedAfterEquals = false;
+    lastPressedEquals = false; // must be set to false so that the first time an operator is pressed after equals display.textcontent doesn't change
+  } else if (typeof displayValue === "number" && storedValue) {
+    display.textContent = operate(operatorValue, storedValue, displayValue); // had to use typeof because 0 is falsy
+    displayValue = +display.textContent; // 3. allows display to be updated when chaining operations
+  }
+  operatorValue = operator.textContent;
+  storedValue = displayValue;
+  displayValue = ""; // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
+  return operatorValue;
+}
+
+function retainDisplay() {
+  display.textContent = displayValue;
+  digitPressedAfterEquals = false;
+  lastPressedEquals = true; // keeps the current displayed value if equals is clicked before selecting an operator
+}
+
+function operateOnEquals() {
   if (lastPressedEquals || digitPressedAfterEquals) {
     display.textContent = operate(operatorValue, displayValue, storedValue); // parameters must be reversed for subtraction and division
     displayValue = +display.textContent;
     digitPressedAfterEquals = false;
     lastPressedEquals = true;
-    console.log([
-      operatorValue,
-      storedValue,
-      displayValue,
-      lastPressedEquals,
-      digitPressedAfterEquals,
-    ]);
   } else {
     if (displayValue === "") {
+      // must be a strict equality because "" == 0
       displayValue = storedValue;
     }
     display.textContent = operate(operatorValue, storedValue, displayValue);
     storedValue = displayValue;
     displayValue = +display.textContent;
     lastPressedEquals = true; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same.
-    console.log([
-      operatorValue,
-      storedValue,
-      displayValue,
-      lastPressedEquals,
-      digitPressedAfterEquals,
-    ]);
   }
-});
+}
 
 function add(x, y) {
   return x + y;
