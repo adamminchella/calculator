@@ -4,11 +4,19 @@ const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
 const backspace = document.querySelector(".backspace");
+const negate = document.querySelector(".negate");
 let storedValue = "";
 let displayValue = "";
 let operatorValue = "";
 let lastPressedEquals = false;
 let digitPressedAfterEquals = false;
+
+negate.addEventListener("click", negateDisplay);
+
+function negateDisplay() {
+  display.textContent = display.textContent * -1;
+  displayValue = +display.textContent;
+}
 
 backspace.addEventListener("click", () => {
   let displayString = display.textContent;
