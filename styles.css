@@ -55,6 +55,19 @@ button:hover {
   color: white;
   background-color: rgb(246, 153, 7);
   font-size: 30px;
+  transition: all 0.2s ease-in-out;
+}
+
+.fill {
+  color: rgb(246, 153, 7);
+  background-color: white;
+  transition: all 0.2s ease-in-out;
+}
+
+.operator:hover,
+.equals:hover {
+  color: rgb(246, 153, 7);
+  background-color: white;
 }
 
 .digit,

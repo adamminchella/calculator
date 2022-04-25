@@ -43,11 +43,15 @@ backspace.addEventListener("click", () => {
 clear.addEventListener("click", clearData);
 
 digits.forEach((digit) => {
-  digit.addEventListener("click", () => populateDisplay(digit));
+  digit.addEventListener("click", () => {
+    removeOperatorFill();
+    populateDisplay(digit);
+  });
 });
 
 operators.forEach((operator) => {
-  operator.addEventListener("click", () => {
+  operator.addEventListener("click", (e) => {
+    toggleOperatorFill(e);
     if (storedValue && displayValue === "") {
       return reselectOperator(operator);
     }
@@ -56,11 +60,32 @@ operators.forEach((operator) => {
 });
 
 equals.addEventListener("click", () => {
+  removeOperatorFill();
   if (!operatorValue) {
     return retainDisplay();
   }
   operateOnEquals();
 });
+
+function toggleOperatorFill(e) {
+  if (!e.target.classList.contains("fill")) {
+    operators.forEach((operator) => {
+      if (e.target.classList == operator.classList) {
+        e.target.classList.add("fill");
+      } else {
+        operator.classList.remove("fill");
+      }
+    });
+  }
+}
+
+function removeOperatorFill() {
+  operators.forEach((operator) => {
+    if (operator.classList.contains("fill")) {
+      operator.classList.remove("fill");
+    }
+  });
+}
 
 function clearData() {
   storedValue = "";
@@ -115,7 +140,11 @@ function operateOnOperator(operator) {
 }
 
 function retainDisplay() {
-  display.textContent = displayValue;
+  if (displayValue == "") {
+    display.textContent = "0";
+  } else {
+    display.textContent = displayValue;
+  }
   digitPressedAfterEquals = false;
   lastPressedEquals = true; // keeps the current displayed value if equals is clicked before selecting an operator
 }
