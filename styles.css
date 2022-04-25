@@ -62,8 +62,8 @@ button:hover {
   background-color: rgb(49, 49, 49);
 }
 
-.zero {
+/* .zero {
   grid-column: 1 / span 2;
   width: 89%;
   border-radius: 50px;
-}
+} */

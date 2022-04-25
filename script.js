@@ -3,22 +3,21 @@ const display = document.querySelector(".display");
 const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
+const backspace = document.querySelector(".backspace");
 let storedValue = "";
 let displayValue = "";
 let operatorValue = "";
 let lastPressedEquals = false;
 let digitPressedAfterEquals = false;
 
-clear.addEventListener("click", clearData);
+backspace.addEventListener("click", () => {
+  let displayString = display.textContent;
+  let lastDigitRemoved = displayString.slice(0, displayString.length - 1);
+  displayValue = +lastDigitRemoved;
+  display.textContent = displayValue;
+});
 
-function clearData() {
-  storedValue = "";
-  displayValue = "";
-  operatorValue = "";
-  display.textContent = 0;
-  lastPressedEquals = false;
-  digitPressedAfterEquals = false;
-}
+clear.addEventListener("click", clearData);
 
 digits.forEach((digit) => {
   digit.addEventListener("click", () => populateDisplay(digit));
@@ -40,6 +39,15 @@ equals.addEventListener("click", () => {
   operateOnEquals();
 });
 
+function clearData() {
+  storedValue = "";
+  displayValue = "";
+  operatorValue = "";
+  display.textContent = 0;
+  lastPressedEquals = false;
+  digitPressedAfterEquals = false;
+}
+
 function populateDisplay(digit) {
   if (lastPressedEquals) {
     clearDisplay();
@@ -50,6 +58,12 @@ function populateDisplay(digit) {
   }
   display.textContent += digit.textContent;
   displayValue = +display.textContent;
+  console.log([
+    storedValue,
+    displayValue,
+    lastPressedEquals,
+    digitPressedAfterEquals,
+  ]);
   return displayValue;
 }
 
