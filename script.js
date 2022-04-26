@@ -17,11 +17,27 @@ percent.addEventListener("click", () => {
   displayValue = +display.textContent;
 });
 
-negate.addEventListener("click", negateDisplay);
+negate.addEventListener("click", () => {
+  negateDisplay();
+});
 
 function negateDisplay() {
-  display.textContent = display.textContent * -1;
-  displayValue = +display.textContent;
+  if (display.textContent == `-0`) {
+    display.textContent = "0";
+  } else if (displayValue == "") {
+    display.textContent = `-0`;
+  } else {
+    display.textContent = display.textContent * -1;
+    displayValue = +display.textContent;
+  }
+  console.log([
+    operatorValue,
+    storedValue,
+    displayValue,
+    display.textContent,
+    lastPressedEquals,
+    digitPressedAfterEquals,
+  ]);
 }
 
 backspace.addEventListener("click", () => {
@@ -40,7 +56,10 @@ backspace.addEventListener("click", () => {
   }
 });
 
-clear.addEventListener("click", clearData);
+clear.addEventListener("click", () => {
+  clearData();
+  removeOperatorFill();
+});
 
 digits.forEach((digit) => {
   digit.addEventListener("click", () => {
@@ -101,6 +120,10 @@ function populateDisplay(digit) {
     clearDisplay();
     digitPressedAfterEquals = true;
     lastPressedEquals = false;
+  } else if (display.textContent.includes("-") && display.textContent == 0) {
+    display.textContent =
+      display.textContent.substr(0, 1) +
+      display.textContent.substr(2, display.textContent.length);
   } else if (displayValue == "") {
     clearDisplay(); // 1. resets displayValue so the display can be cleared when another digit is pressed after selecting an operator
   }
@@ -135,7 +158,15 @@ function operateOnOperator(operator) {
   }
   operatorValue = operator.textContent;
   storedValue = displayValue;
-  displayValue = ""; // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
+  displayValue = "";
+  console.log([
+    operatorValue,
+    storedValue,
+    displayValue,
+    display.textContent,
+    lastPressedEquals,
+    digitPressedAfterEquals,
+  ]); // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
   return operatorValue;
 }
 
