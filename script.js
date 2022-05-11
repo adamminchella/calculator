@@ -129,13 +129,7 @@ function populateDisplay(digit) {
   }
   display.textContent += digit.textContent;
   displayValue = +display.textContent;
-  console.log([
-    operatorValue,
-    storedValue,
-    displayValue,
-    lastPressedEquals,
-    digitPressedAfterEquals,
-  ]);
+  insertCommas();
   return displayValue;
 }
 
@@ -167,6 +161,7 @@ function operateOnOperator(operator) {
     lastPressedEquals,
     digitPressedAfterEquals,
   ]); // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
+  insertCommas();
   return operatorValue;
 }
 
@@ -196,6 +191,13 @@ function operateOnEquals() {
     displayValue = +display.textContent;
     lastPressedEquals = true; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same.
   }
+  insertCommas();
+}
+
+function insertCommas() {
+  display.textContent = Number(
+    display.textContent.replace(/,/g, "")
+  ).toLocaleString();
 }
 
 function add(x, y) {
