@@ -56,6 +56,7 @@ backspace.addEventListener("click", () => {
     displayValue = +display.textContent;
   }
   insertCommas();
+  resizeDisplay();
 });
 
 clear.addEventListener("click", () => {
@@ -67,6 +68,7 @@ digits.forEach((digit) => {
   digit.addEventListener("click", () => {
     removeOperatorFill();
     populateDisplay(digit);
+    resizeDisplay();
   });
 });
 
@@ -77,6 +79,7 @@ operators.forEach((operator) => {
       return reselectOperator(operator);
     }
     operateOnOperator(operator);
+    resizeDisplay();
   });
 });
 
@@ -86,6 +89,7 @@ equals.addEventListener("click", () => {
     return retainDisplay();
   }
   operateOnEquals();
+  resizeDisplay();
 });
 
 function toggleOperatorFill(e) {
@@ -106,6 +110,16 @@ function removeOperatorFill() {
       operator.classList.remove("fill");
     }
   });
+}
+
+function resizeDisplay() {
+  if (display.textContent.length < 10) {
+    display.setAttribute("style", "font-size: 60px");
+  } else if (display.textContent.length === 10) {
+    display.setAttribute("style", "font-size: 55px");
+  } else if (display.textContent.length === 11) {
+    display.setAttribute("style", "font-size: 50px");
+  }
 }
 
 function clearData() {
@@ -142,8 +156,6 @@ function populateDisplay(digit) {
   ]);
   return displayValue;
 }
-
-console.log((8).toLocaleString());
 
 function insertCommas() {
   display.textContent = Number(
