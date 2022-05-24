@@ -27,9 +27,10 @@ function negateDisplay() {
   } else if (displayValue == "") {
     display.textContent = `-0`;
   } else {
-    display.textContent = display.textContent * -1;
+    display.textContent = Number(display.textContent.replace(/,/g, "")) * -1;
     displayValue = +display.textContent;
   }
+  insertCommas();
   console.log([
     operatorValue,
     storedValue,
@@ -54,6 +55,7 @@ backspace.addEventListener("click", () => {
     display.textContent = lastDigitRemoved;
     displayValue = +display.textContent;
   }
+  insertCommas();
 });
 
 clear.addEventListener("click", () => {
@@ -128,9 +130,25 @@ function populateDisplay(digit) {
     clearDisplay(); // 1. resets displayValue so the display can be cleared when another digit is pressed after selecting an operator
   }
   display.textContent += digit.textContent;
-  displayValue = +display.textContent;
+  displayValue = +display.textContent.replace(/,/g, ""); // Must remove commas or displayValue becomes NaN
   insertCommas();
+  console.log([
+    operatorValue,
+    storedValue,
+    displayValue,
+    display.textContent,
+    lastPressedEquals,
+    digitPressedAfterEquals,
+  ]);
   return displayValue;
+}
+
+console.log((8).toLocaleString());
+
+function insertCommas() {
+  display.textContent = Number(
+    display.textContent.replace(/,/g, "")
+  ).toLocaleString();
 }
 
 function clearDisplay() {
@@ -191,13 +209,15 @@ function operateOnEquals() {
     displayValue = +display.textContent;
     lastPressedEquals = true; // 2. must be set to true so that when an operator is pressed after the equals the current display is kept the same.
   }
+  console.log([
+    operatorValue,
+    storedValue,
+    displayValue,
+    display.textContent,
+    lastPressedEquals,
+    digitPressedAfterEquals,
+  ]);
   insertCommas();
-}
-
-function insertCommas() {
-  display.textContent = Number(
-    display.textContent.replace(/,/g, "")
-  ).toLocaleString();
 }
 
 function add(x, y) {
