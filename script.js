@@ -79,6 +79,12 @@ operators.forEach((operator) => {
       return reselectOperator(operator);
     }
     operateOnOperator(operator);
+    if (storedValue.toString().length > 9) {
+      convertToExponential();
+      resizeDisplay();
+      return;
+    }
+    insertCommas();
     resizeDisplay();
   });
 });
@@ -89,6 +95,12 @@ equals.addEventListener("click", () => {
     return retainDisplay();
   }
   operateOnEquals();
+  if (display.textContent.length > 9) {
+    convertToExponential();
+    resizeDisplay();
+    return;
+  }
+  insertCommas();
   resizeDisplay();
 });
 
@@ -112,12 +124,17 @@ function removeOperatorFill() {
   });
 }
 
+function convertToExponential() {
+  let number = +display.textContent;
+  return (display.textContent = number.toExponential(3));
+}
+
 function resizeDisplay() {
   if (display.textContent.length < 10) {
     display.setAttribute("style", "font-size: 60px");
   } else if (display.textContent.length === 10) {
     display.setAttribute("style", "font-size: 55px");
-  } else if (display.textContent.length === 11) {
+  } else {
     display.setAttribute("style", "font-size: 50px");
   }
 }
@@ -132,6 +149,9 @@ function clearData() {
 }
 
 function populateDisplay(digit) {
+  if (displayValue.toString().length == 9) {
+    return;
+  }
   if (lastPressedEquals) {
     clearDisplay();
     digitPressedAfterEquals = true;
@@ -191,7 +211,6 @@ function operateOnOperator(operator) {
     lastPressedEquals,
     digitPressedAfterEquals,
   ]); // 1. resets display value so the display can be cleared when another digit is pressed after selecting an operator
-  insertCommas();
   return operatorValue;
 }
 
@@ -229,7 +248,6 @@ function operateOnEquals() {
     lastPressedEquals,
     digitPressedAfterEquals,
   ]);
-  insertCommas();
 }
 
 function add(x, y) {
